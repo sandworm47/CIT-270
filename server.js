@@ -17,17 +17,21 @@ const {v4: uuidv4} = require('uuid');//universally unique identifier
 
 app.use(bodyParser.json());//application middleware, looks for incoming data
 
+app.use(express.static('public'));
+
 app.get('/', (req, res) => {
     res.send('Hello Owen!');
 });
 
-app.post('/login', (req, res) =>{
+app.post('/login', async(req, res) => {
 
     const loginUser = req.body.userName;
     const loginPassword = req.body.password;
+    console.log(req.body);
     console.log('Login username:'+loginUser);
+    const correctPassword = await redisClient.hGet('UserMap', loginUser);
 
-    if (loginUser == 'lame4198@gmail.com' && loginPassword == 'Hellothere66!'){
+    if (loginPassword == correctPassword){
         const loginToken = uuidv4(); 
         res.send(loginToken);
     }
