@@ -14,18 +14,29 @@ const redisClient = redis.createClient({
 
 const {v4: uuidv4} = require('uuid');//universally unique identifier
 
+const cookieParser = require('cookie-parser');
+
+app.use(cookieParser());
 
 app.use(bodyParser.json());//application middleware, looks for incoming data
 
 app.use(express.static('public'));
 
+app.post('/rapidsteptest', async(req, res) => {
+    const steps = req.body;
+    await redisClient.zAdd('Steps', steps, 0);
+    console.log('Steps', steps);
+});
+
 app.get('/', (req, res) => {
     res.send('Hello Owen!');
 });
 
-app.get('/validate/:loginToken', async(req, res) => {
-    const loginToken = req.params.loginToken
+app.get('/validate', async(req, res) => {
+    const loginToken = req.cookies.stedicookie;
+    console.log('loginToken', loginToken)
     const loginUser = await redisClient.hGet('TokenMap', loginToken)
+    res.send(loginUser);
 });
 
 app.post('/login', async(req, res) => {
