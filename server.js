@@ -2,11 +2,15 @@ const express = require ('express');
 
 const app = express();
 
-const port = 3000;
+const port = 443;
 
 const bodyParser = require ('body-parser');
 
 const redis = require ('redis');
+
+const https = require ('https');
+
+const fs = require ('fs');
 
 const redisClient = redis.createClient({
     url:'redis://127.0.0.1:6379'
@@ -79,7 +83,20 @@ app.post('/login', async(req, res) => {
     
 })
 
-app.listen(port, () => {
+// app.listen(port, () => {
+//     redisClient.connect();
+//     console.log('listening');
+// });
+
+https.createServer(
+    {
+        key: fs.readFileSync('./server.key'),
+        cert: fs.readFileSync('./server.cert'),
+        ca: fs.readFileSync('./chain.pem')
+    },
+    app
+)
+.listen(port, ()=> {
     redisClient.connect();
-    console.log('listening');
+    console.log('Listening on port: '+port);
 });
