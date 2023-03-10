@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+# This is the name of my deployment
+  name: cit270owenservice
+# This is the specification for our deployment
+spec:
+  # How many pods?
+  replicas: 1
+  # Used to identify the pod we want to talk to
+  selector:
+    matchLabels:
+      app: cit270owenservice
+# Template to create containers
+  template:
+    metadata:
+      name: cit270owenservice
+      labels:
+        app: cit270owenservice
+# Specification for the pod
+    spec:
+      containers:
+# name of the containers
+      - name: cit270owenservice
+# Docker image registry
+        image: united-aviary-379820/owen-api
+# Directories we are making accessible to containers
+        volumeMounts:
+# Name of the volume
+        - name: ssl
+# Directory for certificates
+          mountPath: "/etc/letsencrypt/live/SSL"
+# First part if the command ti start our API
+        command: ["npm"]
+# Parameters to add to the command
+        args: ["run", "start"]
+# Recourses for this pod
+        resources:
+          requests:
+# How many cores to start with
+            cpu: 0.125
+# How much memory to start with
+            memory: 500Mi
+          limits:
+# How many cores to limit to
+            cpu: 0.125
+# Max memory for the pod
+            memory: 600Mi
+        imagePullPolicy: Always
+# Create volumes from the secrets
+      volumes:
+# Name of the secret
+      - name: ssl
+# Secret
+        secret:
+# Secret name you created today
+          secretName: owencerts

@@ -103,7 +103,7 @@ dist
 # TernJS port file
 .tern-port
 
-
+*.pem
 server.cert
 server.key
 chain.pem
