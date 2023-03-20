@@ -23,13 +23,13 @@ spec:
 # name of the containers
       - name: cit270owenservice
 # Docker image registry
-        image: united-aviary-379820/owen-api
+        image: gcr.io/united-aviary-379820/owen-api
 # Directories we are making accessible to containers
         volumeMounts:
 # Name of the volume
         - name: ssl
 # Directory for certificates
-          mountPath: "/etc/letsencrypt/live/SSL"
+          mountPath: "/etc/letsencrypt/live/owencleland.cit270.com/"
 # First part if the command ti start our API
         command: ["npm"]
 # Parameters to add to the command
@@ -55,3 +55,15 @@ spec:
         secret:
 # Secret name you created today
           secretName: owencerts
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cit270owenservice-loadbalancer
+spec:
+  selector:
+    app: cit270owenservice
+  type: LoadBalancer
+  ports:
+  - port: 443
+    targetPort: 443

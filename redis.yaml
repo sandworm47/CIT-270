@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-stedi-owen
+specs:
+  selector:
+    matchLabels:
+      app: redis-stedi-owen
+  serviceName: redis-stedi-owen
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: redis-stedi-owen
+    spec:
+      containers:
+        - name: redis-stedi-owen
+          image: redis:7.0.5-alpine
+          imagePullPolicy: Always
+          args: ["--requirepass", "$(REDIS_PASS)", "--appendonly", "yes", "--save", "900", "1", "--save", "30", "2"]
+          ports:
+            - containerPort: 6397
+              name: REDIS_PASS
+          env
+          - name: REDIS_PASS
+            valueFrom:
+              secretKeyRef:
+                name: redis-secrets-owen
+                key: REDIS_PASS
+          volumeMounts:
+          - name: redis-stedi-owen
+            mountPath: /data
+    volumeClaimTemplates:
+    - metadata:
+      name: redis-owen-volume
+    spec;
+      accessModes:
+        - ReadWriteOnce:
+      resources:
+        requests:
+          storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-stedi-owen
+spec:
+  ports:
+    - port: 6397
+      name: redis
+  clusterIP: None
+  selector:
+    app: redis-stedi-owen
