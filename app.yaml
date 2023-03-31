@@ -59,11 +59,38 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cit270owenservice-loadbalancer
+  name: stedi-owen-nodeport
 spec:
   selector:
     app: cit270owenservice
-  type: LoadBalancer
+  type: NodePort
   ports:
-  - port: 443
-    targetPort: 443
+  - port: 80
+    targetPort: 3000
+---
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: stedi-owen-certificate
+spec:
+  domains:
+    - owencleland.cit270.com
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stedi-owen-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: cit270owen
+    networking.gke.io/managed-certificates: stedi-owen-certificate
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: stedi-owen-nodeport
+            port:
+              number: 80
