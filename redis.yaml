@@ -20,7 +20,7 @@ spec:
           args: ["--requirepass", "$(REDIS_PASS)", "--appendonly", "yes", "--save", "900", "1", "--save", "30", "2"]
           ports:
             - containerPort: 6397
-              name: REDIS_PASS
+              name: redis-owen
           env:
           - name: REDIS_PASS
             valueFrom:
@@ -28,7 +28,7 @@ spec:
                 name: redis-secrets-owen
                 key: REDIS_PASS
           volumeMounts:
-          - name: redis-stedi-owen
+          - name: redis-owen-volume
             mountPath: /data
   volumeClaimTemplates:
   - metadata:
