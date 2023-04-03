@@ -30,12 +30,12 @@ spec:
           volumeMounts:
           - name: redis-stedi-owen
             mountPath: /data
-    volumeClaimTemplates:
-    - metadata:
+  volumeClaimTemplates:
+  - metadata:
       name: redis-owen-volume
     spec:
       accessModes:
-        - ReadWriteOnce:
+        - ReadWriteOnce
       resources:
         requests:
           storage: 10Gi
