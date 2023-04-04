@@ -13,7 +13,7 @@ const https = require ('https');
 const fs = require ('fs');
 
 const redisClient = redis.createClient({
-    url:'redis://default:Trinitrotoluene#479944@redis-stedi-owen:6379'
+    url:'redis://default:Trinitrotoluene479944@redis-stedi-owen:6379'
 });
 
 const {v4: uuidv4} = require('uuid');//universally unique identifier
