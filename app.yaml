@@ -69,7 +69,7 @@ spec:
     targetPort: 3000
 ---
 apiVersion: networking.gke.io/v1
-kind: ManagedCertificate
+kind: Managednodeificate
 metadata:
   name: stedi-owen-certificate
 spec:
